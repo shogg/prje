@@ -43,21 +43,33 @@ type pqueue struct {
 
 func main() {
 	g := parseGraph(graphString)
-	g[3].val = 666
 	g.dijkstra()
-	fmt.Print(g)
+
+	max := 0
+	node := -1
+	for i := 105; i <= 119; i++ {
+		sum := 0
+		for n := i; n >= 0; n = g[n].prev {
+			sum += g[n].val
+		}
+		print(sum, " ")
+		if sum > max { max = sum; node = i }
+	}
+
+	println()
+	println(node, max)
 }
 
 func (g graph) dijkstra() {
-	var pq *pqueue = newPqueue(g)
+	pq := newPqueue(g)
 	heap.Init(pq)
 
 	g[0].mean = float64(g[0].val)
-	for i := 0; i < len(g); i++ {
-		heap.Push(pq, i)
+	for n := 0; n < len(g); n++ {
+		heap.Push(pq, n)
 	}
 
-	fmt.Print(g)
+//	fmt.Print(g)
 
 	for pq.Len() > 0 {
 		n := heap.Pop(pq).(int)
@@ -67,6 +79,10 @@ func (g graph) dijkstra() {
 				g.update(m, n, pq)
 			}
 		}
+		fmt.Println(g)
+
+//		var bla byte
+//		fmt.Scan(&bla)
 	}
 }
 
@@ -93,33 +109,29 @@ func (g graph) update(node, prev int, pq *pqueue) {
 	println("update", node)
 
 	if(mean > g[node].mean) {
+		i := pq.Indexof(node)
+		removed := heap.Remove(pq, i).(int)
+		if(removed != node) {
+			panic(fmt.Sprint("pqueue remove at index ", i, ": expected ", node, " was ", removed))
+		}
+
 		g[node].mean = mean
 		g[node].prev = prev
+
+		heap.Push(pq, node)
 	}
-	fmt.Println(g)
-
-	i := pq.Indexof(node)
-	println(i)
-
-	removed := heap.Remove(pq, i).(int)
-	if(removed != node) {
-		panic(fmt.Sprint("panicker ", removed, " != ", node))
-	}
-
-	heap.Push(pq, node)
 }
 
 func (g graph) neighbors(n int) []int {
 
 	row := 0
-	for i := 0; 2*i + 1 < n; i = 2*i + 1 {
+	for i := 0; i < n; i += row+1 {
 		row++
 	}
 
-	var m []int
 	if row + 1 >= 15 { return nil }
 
-	m = []int { n + row + 1, n + row + 2 }
+	m := []int { n + row + 1, n + row + 2 }
 
 	println(n, "->", m[0], m[1])
 	return m
@@ -129,6 +141,8 @@ func (pq *pqueue) Push(x interface{}) {
 	n := pq.Len()
 	pq.nodes = append(pq.nodes, x.(int))
 	pq.indexes[x.(int)] = n
+
+//	println("pq.Push", n, ":",  x.(int))
 }
 
 func (pq *pqueue) Pop() interface{} {
@@ -136,16 +150,20 @@ func (pq *pqueue) Pop() interface{} {
 	x := pq.nodes[n-1]
 	pq.nodes = pq.nodes[0:n-1]
 	pq.indexes[x] = -1
+//	println("pq.Pop", n-1, ":",  x)
 	return x
 }
 
 func (pq *pqueue) Len() int { return len(pq.nodes) }
 
 func (pq *pqueue) Less(i, j int) bool {
-	return pq.g[i].mean > pq.g[j].mean
+	return pq.g[pq.nodes[i]].mean >= pq.g[pq.nodes[j]].mean
 }
 func (pq *pqueue) Swap(i, j int) {
+//	println("pq.Swap", i, j,":",  pq.nodes[i], pq.nodes[j])
 	pq.nodes[i], pq.nodes[j] = pq.nodes[j], pq.nodes[i]
+	pq.indexes[pq.nodes[i]] = i
+	pq.indexes[pq.nodes[j]] = j
 }
 
 func (pq *pqueue) Indexof(x int) int {
@@ -169,8 +187,13 @@ func (g graph) String() string {
 	s := ""
 	i := 0
 	for row := 0; row < 15; row++ {
+		s += fmt.Sprint(i, ": ")
 		for col := 0; col <= row; col++ {
-			s += fmt.Sprint(g[i]) + " "
+			if g[i].mean > 0 {
+				s += fmt.Sprint("\x1b[1m")
+			}
+			s += fmt.Sprintf("{%d %d %.0f}", g[i].val, g[i].prev, g[i].mean) + " "
+			s += fmt.Sprint("\x1b[0m")
 			i++
 		}
 		s += "\n"
