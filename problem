@@ -1,0 +1,3 @@
+#! /bin/bash
+
+time go run e$(printf "%04u" $1).go
