@@ -3,7 +3,6 @@ package main
 import (
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 var (
@@ -38,8 +37,6 @@ func split(n int) []int {
 		d[len(d)-i-1], _ = strconv.Atoi(s)
 	}
 
-	fmt.Println(d)
-
 	return d
 }
 
@@ -49,7 +46,7 @@ func written(d []int) string {
 	for i := 0; i < len(d); i++ {
 		if d[i] == 0 { continue }
 		if len(d) >= 2 && i == 0 && d[1] == 1 { continue }
-		if i == 1 && d[i] == 1 { s += teens[d[0]]; break }
+		if i == 1 && d[1] == 1 { s += teens[d[0]]; continue }
 		if i == 1 { s += tys[d[i]]; continue }
 		s += digits[d[i]] + magnitude[i]
 	}
@@ -57,8 +54,6 @@ func written(d []int) string {
 	if len(d) > 2 && (d[0] != 0 || d[1] != 0) {
 		s += "and"
 	}
-
-	println(s)
 
 	return s
 }
