@@ -1,39 +1,28 @@
 package main
 
-import (
-	"fmt"
-)
-
-// 73682
-
 func main() {
 	pence := []int { 200, 100, 50, 20, 10, 5, 2, 1 }
 	coins := []int { 1, 0, 0, 0, 0, 0, 0, 0 }
 
-//	head(pence)
-//	debug(coins)
-	sum := count(0, coins, pence) + 1
+	sum := count(coins, pence) + 1
 	println(sum)
 }
 
-func count(i int, coins, pence []int) int {
-	if i >= len(coins) - 1 { return 0 }
-
-//	for coins[i] == 0 && i <= len(coins) - 1 { i++ }
+func count(coins, pence []int) int {
+	if len(coins) == 1 { return 0 }
 
 	sum := 0
-	for j := i + 1; j < len(coins) - 1 ; j++ {
-		if coins[j] == 0 { continue }
-		sum += count(0, coins[j:], pence[j:])
-		break
+	for i := 1; i < len(coins) - 1 ; i++ {
+		if coins[i] != 0 {
+			sum += count(coins[i:], pence[i:])
+			break
+		}
 	}
 
-	for c := 1; c <= coins[i]; c++ {
-		s := split(i + 1, c * pence[i], pence)
-		s = plus(s, coins)
-		s[i] -= c
-//		debug(s)
-		sum += count(i + 1, s, pence) + 1
+	for c := 1; c <= coins[0]; c++ {
+		s := split(c * pence[0], pence[1:])
+		s = plus(s, coins[1:])
+		sum += count(s, pence[1:]) + 1
 	}
 
 	return sum
@@ -46,31 +35,13 @@ func plus(a, b []int) []int {
 	return a
 }
 
-func split(i, value int, pence []int) []int {
+func split(value int, pence []int) []int {
 
 	s := make([]int, len(pence))
-	for ; i < len(pence); i++ {
+	for i := 0; i < len(pence); i++ {
 		s[i], value = value / pence[i], value % pence[i]
 		if value == 0 { break }
 	}
 
 	return s
-}
-
-func head(pence []int) {
-	for i := 7; i >= 0; i-- {
-		print(fmt.Sprintf("%3d ", pence[len(pence) - i - 1]))
-	}
-	println(fmt.Sprint("\n-------------------------------"))
-}
-
-func debug(coins []int) {
-	for i := 7; i >= 0; i-- {
-		if i > len(coins) - 1 || coins[len(coins) - i - 1] == 0 {
-			fmt.Print("    ")
-		} else {
-			fmt.Printf("%3d ", coins[len(coins) - i - 1])
-		}
-	}
-	fmt.Println()
 }
