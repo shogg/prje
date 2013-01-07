@@ -12,15 +12,18 @@ func main() {
 
 	head(pence)
 	debug(coins)
-	sum := count(2, coins, pence)
+	sum := count(1, coins, pence)
 	println(sum)
 }
 
 func count(i int, coins, pence []int) int {
-	if i >= len(coins) -1 { return 1 }
+	if i >= len(coins) - 1 { return 1 }
 
 	sum := 1
 	for c := 1; c <= coins[i]; c++ {
+		for j := i + 1; j < len(coins) - 1; j++ {
+			sum += count(j, coins, pence)
+		}
 		s := split(i+1, c * pence[i], pence)
 		s = plus(s, coins)
 		s[i] = coins[i] - c
