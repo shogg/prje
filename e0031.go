@@ -4,31 +4,36 @@ import (
 	"fmt"
 )
 
-// 73652 - wrong
+// 73682
 
 func main() {
 	pence := []int { 200, 100, 50, 20, 10, 5, 2, 1 }
-	coins := []int { 0, 0, 1, 0, 0, 0, 0, 0 }
+	coins := []int { 1, 0, 0, 0, 0, 0, 0, 0 }
 
-	head(pence)
-	debug(coins)
-	sum := count(1, coins, pence)
+//	head(pence)
+//	debug(coins)
+	sum := count(0, coins, pence) + 1
 	println(sum)
 }
 
 func count(i int, coins, pence []int) int {
-	if i >= len(coins) - 1 { return 1 }
+	if i >= len(coins) - 1 { return 0 }
 
-	sum := 1
+//	for coins[i] == 0 && i <= len(coins) - 1 { i++ }
+
+	sum := 0
+	for j := i + 1; j < len(coins) - 1 ; j++ {
+		if coins[j] == 0 { continue }
+		sum += count(0, coins[j:], pence[j:])
+		break
+	}
+
 	for c := 1; c <= coins[i]; c++ {
-		for j := i + 1; j < len(coins) - 1; j++ {
-			sum += count(j, coins, pence)
-		}
-		s := split(i+1, c * pence[i], pence)
+		s := split(i + 1, c * pence[i], pence)
 		s = plus(s, coins)
-		s[i] = coins[i] - c
-		debug(s)
-		sum += count(i+1, s, pence)
+		s[i] -= c
+//		debug(s)
+		sum += count(i + 1, s, pence) + 1
 	}
 
 	return sum
