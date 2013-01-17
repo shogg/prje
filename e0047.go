@@ -8,7 +8,7 @@ func main() {
 		ok := true
 		for m := n; m < n + 4; m++ {
 			if len(primefactors(m)) < 4 {
-				ok = false; break
+				ok = false; n = m; break
 			}
 		}
 
