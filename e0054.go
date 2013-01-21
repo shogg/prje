@@ -2,9 +2,14 @@ package main
 
 import (
 	"strings"
-//	"fmt"
+	"fmt"
+	"time"
 	"net/http"
 	"io/ioutil"
+)
+
+var (
+	highcard = []int { 0, 0, 2, 3, 6, 12, 24, 46, 89, 172, 332, 640, 1234, 2379, 4586 }
 )
 
 type card struct {
@@ -15,7 +20,7 @@ type hand []card
 
 func main() {
 
-	hands := readHands("")
+	hands := readHands("http://projecteuler.net/project/poker.txt")
 
 	p1 := 0
 	for _, h := range hands {
@@ -31,8 +36,9 @@ func main() {
 }
 
 func score(h hand) int64 {
-	s := int64(multiscore(h) + straight(h) + flush(h))
-	s += int64(straight(h)) * int64(flush(h))
+	str := straight(h); fl := flush(h)
+	s := int64(multi(h) + str + fl)
+	s += int64(str) * int64(fl)
 	print(s)
 	return s
 }
@@ -43,8 +49,14 @@ func flush(h hand) int {
 		if last.color != c.color { return 0 }
 		last = c
 	}
-	print("f")
-	return 6e4 + h[4].val
+
+	max := 0
+	for i, c := range count(h) {
+		if c != 0 { max = i }
+	}
+
+	print("F ")
+	return 3500 + max
 }
 
 func straight(h hand) int {
@@ -54,20 +66,24 @@ func straight(h hand) int {
 		if c == 0 { n = 0; continue }
 		n++
 		if n == 5 {
-			print("s")
-			return 5e4 + i
+			print("S ")
+			return 3400 + i
+		}
+		if n == 4 && counts[2] == 1 && counts[14] == 1 {
+			print("S ")
+			return 3400 + i
 		}
 	}
 	return 0
 }
 
-func multiscore(h hand) int {
-	counts := count(h)
+func multi(h hand) int {
 	val := 0
-	for i, c := range counts {
+	for i, c := range count(h) {
 		if c == 0 { continue }
-		val += pow(15, c) + i
+		val += pow(15, c) * i
 		switch c {
+		case 1: print("   ")
 		case 2: print("P2 ")
 		case 3: print("K3 ")
 		case 4: print("K4 ")
@@ -96,7 +112,10 @@ func pow(n, e int) int {
 }
 
 func readHands(url string) [][2]hand {
-	poker_txt := read("http://projecteuler.net/project/poker.txt")
+
+	t0 := time.Now()
+	poker_txt := read(url)
+	fmt.Println("GET", time.Now().Sub(t0))
 
 	var hands [][2]hand
 
@@ -125,7 +144,6 @@ func read(url string) string {
 	text, err := ioutil.ReadAll(resp.Body)
 	if err != nil { panic(err) }
 
-	println("HTTP ERFOLGREICH --------------------")
 	return string(text)
 }
 
