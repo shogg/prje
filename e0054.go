@@ -9,7 +9,23 @@ import (
 )
 
 var (
-	highcard = []int { 0, 0, 2, 3, 6, 12, 24, 46, 89, 172, 332, 640, 1234, 2379, 4586 }
+	highcard = []int { 0, 0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 }
+)
+
+const (
+	A = 14
+)
+
+const (
+	HIGHCARD = iota * 1e5
+	PAIR
+	TWO_PAIRS
+	THREE
+	STRAIGHT
+	FLUSH
+	FULL_HOUSE
+	FOUR
+	STRAIGHT_FLUSH
 )
 
 type card struct {
@@ -24,23 +40,59 @@ func main() {
 
 	p1 := 0
 	for _, h := range hands {
-		s0 := score(h[0]); print("\t")
+		s0 := score(h[0])
 		s1 := score(h[1])
 		if s0 > s1 {
 			p1++
+			fmt.Println(h[0], ">", h[1], "\t", s0, s1)
+		} else {
+			fmt.Println(h[0], "<", h[1], "\t", s0, s1)
 		}
-		println()
 	}
 
 	println(p1)
 }
 
-func score(h hand) int64 {
-	str := straight(h); fl := flush(h)
-	s := int64(multi(h) + str + fl)
-	s += int64(str) * int64(fl)
-	print(s)
+func score(h hand) int {
+
+	str := straight(h)
+	flu := flush(h)
+	if str * flu > 0 {
+		return STRAIGHT_FLUSH + str * flu
+	}
+
+	m := multi(h, 0, 1, 1)
+	if m > 0 { return FULL_HOUSE + m }
+
+	if flu > 0 { return FLUSH + flu }
+	if str > 0 { return STRAIGHT + str }
+
+	m = multi(h, 2, 0, 1)
+	if m > 0 { return THREE + m }
+	m = multi(h, 1, 2)
+	if m > 0 { return TWO_PAIRS + m }
+	m = multi(h, 3, 1)
+	if m > 0 { return PAIR + m }
+
+	s := 0
+	for _, card := range h {
+		s += highcard[card.val]
+	}
 	return s
+}
+
+func multi(h hand, counts ...int) int {
+	m := 0
+	for i, c := range count(h) {
+		if c == 0 { continue }
+		if c > len(counts) { return 0 }
+		counts[c - 1]--
+		if counts[c - 1] < 0 { return 0 }
+
+		m += pow(16, c - 1) * i
+	}
+
+	return m
 }
 
 func flush(h hand) int {
@@ -52,45 +104,25 @@ func flush(h hand) int {
 
 	max := 0
 	for i, c := range count(h) {
-		if c != 0 { max = i }
+		if c > 0 { max = i }
 	}
 
-	print("F ")
-	return 3500 + max
+	return max
 }
 
 func straight(h hand) int {
 	counts := count(h)
 	n := 0
+	if counts[14] == 1 { n = 1 }
 	for i, c := range counts {
+		if i < 2 { continue }
 		if c == 0 { n = 0; continue }
 		n++
 		if n == 5 {
-			print("S ")
-			return 3400 + i
-		}
-		if n == 4 && counts[2] == 1 && counts[14] == 1 {
-			print("S ")
-			return 3400 + i
+			return i
 		}
 	}
 	return 0
-}
-
-func multi(h hand) int {
-	val := 0
-	for i, c := range count(h) {
-		if c == 0 { continue }
-		val += pow(15, c) * i
-		switch c {
-		case 1: print("   ")
-		case 2: print("P2 ")
-		case 3: print("K3 ")
-		case 4: print("K4 ")
-		}
-	}
-
-	return val
 }
 
 func count(h hand) []int {
@@ -168,4 +200,40 @@ func parseCard(s string) card {
 	}
 	c := card { val, int(s[1]) }
 	return c
+}
+
+func (h hand) String() string {
+	if flush(h) > 0 {
+		max := 0
+		for i, c := range count(h) {
+			if c > 0 { max = i }
+		}
+		return fmt.Sprint("flu_", card { max, 0 })
+	}
+	if straight(h) > 0 {
+		max := 0
+		for i, c := range count(h) {
+			if c > 0 { max = i }
+		}
+		return fmt.Sprint("str_", card { max, 0 })
+	}
+	s := ""
+	for i, c := range count(h) {
+		for n := 0; n < c; n++ {
+			s += fmt.Sprint(card { i, 0 })
+		}
+	}
+	return s
+}
+
+func (c card) String() string {
+	switch v := c.val; {
+	case v == 10: return "T"
+	case v == 11: return "J"
+	case v == 12: return "Q"
+	case v == 13: return "K"
+	case v == 14: return "A"
+	}
+
+	return fmt.Sprint(c.val)
 }
