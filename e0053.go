@@ -1,15 +1,11 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
 	count := 0
 	for n := 1; n <= 100; n++ {
 		for k := 1; k <= n / 2; k++ {
 			if C(n, k) > 1e6 {
-				count += 2*(n / 2 - k)
+				count += n - 2*(k - n % 2)
 				break
 			}
 		}
@@ -18,13 +14,11 @@ func main() {
 	println(count)
 }
 
+// n!/(k!(n - k)!)
 func C(n, k int) int64 {
 
-	// n!/(k!(n-k)!)
-
 	numer := make([]int, n)
-	m := max(k, n - k)
-	denom := make([]int, m)
+	denom := make([]int, max(k, n - k))
 	for i := range numer { numer[i] = 1 }
 	for i := range denom { denom[i] = 1 }
 	for i := 1; i < min(k, n - k); i++ {
@@ -32,26 +26,22 @@ func C(n, k int) int64 {
 	}
 
 	pnormalize(numer)
-	if n == 5 && k == 2 {
-		fmt.Println(numer)
-	}
 	pnormalize(denom)
 
 	for i := range denom {
 		m := min(numer[i], denom[i])
 		numer[i] -= m
-		denom[i] -= m
 	}
 
-	return mul(numer) / mul(denom)
+	return mul(numer)
 }
 
 func pnormalize(factors []int) {
-	for f := range factors {
-		for _, p := range primefactors(f) {
-			factors[p]++
+	for f, e := range factors {
+		for _, p := range primefactors(f + 1) {
+			factors[p - 1] += e
 		}
-		factors[f]--
+		factors[f] -= e
 	}
 }
 
@@ -59,10 +49,8 @@ func primefactors(n int) []int {
 
 	var result []int
 	for f := 2; f <= n; f++ {
-		if n % f == 0 {
-			result = append(result, f)
-		}
 		for n % f == 0 {
+			result = append(result, f)
 			n /= f
 		}
 	}
@@ -83,7 +71,8 @@ func max(a, b int) int {
 func mul(factors []int) int64 {
 	prod := int64(1)
 	for f, e := range factors {
-		prod *= pow(f, e)
+		prod *= pow(f + 1, e)
+		if prod > 1e18 { break }
 	}
 
 	return prod
