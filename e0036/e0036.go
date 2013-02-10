@@ -1,7 +1,7 @@
 package e0036
 
 import (
-	. "github.com/shogg/prje/lib"
+	. "github.com/shogg/prje/libprje"
 )
 
 func E0036() int64 {

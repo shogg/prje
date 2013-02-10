@@ -1,8 +1,8 @@
 package e0024
 
 import (
-	"fmt"
 	"container/list"
+	"github.com/shogg/prje/libprje"
 )
 
 func E0024() int64 {
@@ -34,7 +34,6 @@ func E0024() int64 {
 	}
 
 	p = append(p, d.Front().Value.(int))
-
-	fmt.Println(p)
-	return int64(0)
+	p = libprje.Reverse(p)
+	return libprje.Number(p, 10)
 }

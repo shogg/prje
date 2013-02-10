@@ -3,8 +3,8 @@ package e0018
 import (
 	"strings"
 	"strconv"
-	"fmt"
 	"container/heap"
+	"fmt"
 )
 
 var (
@@ -45,18 +45,13 @@ func E0018() int64 {
 	g.dijkstra(mean)
 
 	max := 0
-	node := -1
 	for i := 105; i <= 119; i++ {
 		sum := 0
 		for n := i; n >= 0; n = g[n].prev {
 			sum += g[n].val
 		}
-		print(sum, " ")
-		if sum > max { max = sum; node = i }
+		if sum > max { max = sum }
 	}
-
-	println()
-	println(node, ":", max)
 
 	return int64(max)
 }
@@ -72,16 +67,11 @@ func (g graph) dijkstra(prio func(graph, int, int) float64) {
 
 	for pq.Len() > 0 {
 		n := heap.Pop(pq).(int)
-		println("pop", n, fmt.Sprintf("%.2f", g[n].prio))
 		for _, m := range g.neighbors(n) {
 			if pq.Indexof(m) > 0 {
 				g.update(m, n, pq, prio)
 			}
 		}
-		fmt.Println(g)
-
-//		var bla byte
-//		fmt.Scan(&bla)
 	}
 }
 
@@ -96,15 +86,13 @@ func newPqueue(g graph) *pqueue {
 
 func (g graph) update(node, prev int, pq *pqueue, prio func(graph, int, int) float64) {
 
-	println("update", node)
-
 	p := prio(g, node, prev)
 
 	if(p > g[node].prio) {
 		i := pq.Indexof(node)
 		removed := heap.Remove(pq, i).(int)
 		if(removed != node) {
-			panic(fmt.Sprint("pqueue remove at index ", i, ": expected ", node, " was ", removed))
+			panic("pqueue remove failed")
 		}
 
 		g[node].prio = p
@@ -136,8 +124,6 @@ func (g graph) neighbors(n int) []int {
 	if row + 1 >= 15 { return nil }
 
 	m := []int { n + row + 1, n + row + 2 }
-
-	println(n, "->", m[0], m[1])
 	return m
 }
 

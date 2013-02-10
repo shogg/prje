@@ -2,13 +2,13 @@ package e0049
 
 import (
 	"math"
-	"fmt"
 	"sort"
+	"github.com/shogg/prje/libprje"
 )
 
 func E0049() int64 {
 
-	var result []string
+	var result []int64
 
 	for n := 4321; n <= 6789; n++ {
 		d := digits(n, 10)
@@ -27,20 +27,24 @@ func E0049() int64 {
 		t := distTriple(P)
 		if t == nil { continue }
 
-		r := fmt.Sprintf("%d%d%d", t[0], t[1], t[2])
-		if indexS(result, r) < 0 {
-			result = append(result, r)
+		var r []int
+		r = append(r, libprje.Digits(t[2], 10)...)
+		r = append(r, libprje.Digits(t[1], 10)...)
+		r = append(r, libprje.Digits(t[0], 10)...)
+		number := libprje.Number(r, 10)
+		if index64(result, number) < 0 {
+			result = append(result, number)
 		}
 	}
 
 	for _, r := range result {
-		println(r)
+		if r != 148748178147 { return r }
 	}
 
 	return int64(0)
 }
 
-func indexS(A []string, e string) int {
+func index(A []int, e int) int {
 	for i, a := range A {
 		if a == e { return i }
 	}
@@ -48,8 +52,7 @@ func indexS(A []string, e string) int {
 	return -1
 }
 
-
-func index(A []int, e int) int {
+func index64(A []int64, e int64) int {
 	for i, a := range A {
 		if a == e { return i }
 	}

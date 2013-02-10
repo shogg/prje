@@ -13,7 +13,7 @@ func init() {
 		results[10] = int64(142913828922)
 		results[11] = int64(70600674)
 		results[12] = int64(76576500)
-		results[13] = int64(55373762300)
+		results[13] = int64(5537376230)
 //		results[14] = int64()
 //		results[15] = int64()
 		results[16] = int64(1366)

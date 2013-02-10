@@ -3,6 +3,7 @@ package e0013
 import (
 	"strings"
 	"strconv"
+	"github.com/shogg/prje/libprje"
 )
 
 var (
@@ -133,7 +134,8 @@ func E0013() int64 {
 		print(sum[d])
 	}
 
-	return int64(0)
+	n := libprje.Number(sum[42:52], 10)
+	return n
 }
 
 func parseDigits(s string) [100][50]int {
