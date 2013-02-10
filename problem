@@ -2,6 +2,11 @@
 
 cd main
 go build main.go
-time ./main $@
-if [ -e main ]; then rm main; fi
+
+if [ -e main ]
+then
+	time ./main $@
+	rm main
+fi
+
 cd -
