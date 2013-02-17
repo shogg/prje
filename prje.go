@@ -1,5 +1,10 @@
 package prje
 
+import (
+	"math"
+	"sort"
+)
+
 func Digits(n, base int) []int {
 
 	var d []int
@@ -74,4 +79,83 @@ func Psieve(n int) ([]int, []bool) {
 	}
 
 	return primes, sieve
+}
+
+func Prime(p int) bool {
+	if p < 2 { return false }
+	if p == 2 { return true }
+	if p % 2 == 0 { return false }
+	for i := 3; i <= int(math.Sqrt(float64(p))); i += 2 {
+		if p % i == 0 { return false }
+	}
+
+	return true
+}
+
+func Gcd(a, b int) int {
+
+	min := a
+	if b < a { min = b }
+
+	for n := min; n >= 1; n++ {
+		if a % n == 0 && b % n == 0 {
+			return n
+		}
+	}
+
+	return 1
+}
+
+func Factorial(n int) int64 {
+
+	f := int64(1)
+	for i := 1; i <= n; i++ {
+		f *= int64(i)
+	}
+
+	return f
+}
+
+func Pandigital(n int, digits []int) bool {
+	if len(digits) != n { return false }
+
+	tmp := make([]int, len(digits))
+	copy(tmp, digits)
+
+	sort.Ints(tmp)
+
+	for i, d := range tmp {
+		if d != i + 1 { return false }
+	}
+
+	return true
+}
+
+func Permutation(i int, d []int) []int {
+
+	digits := make([]int, len(d))
+	copy(digits, d)
+	N := len(digits)
+	p := make([]int, len(digits))
+	f := FactorialDigits(i)
+	for i := 0; i < len(f); i++ {
+		fi := f[N-i-1]
+		p[N-i-1] = digits[fi]
+		if fi < len(digits) - i - 1 {
+			copy(digits[fi:], digits[fi + 1:])
+		}
+	}
+
+	return p
+}
+
+func FactorialDigits(n int) []int {
+
+	f := make([]int, 4)
+	for i := 1; n != 0; i++ {
+		f[i - 1] = n % i
+		n /= i
+	}
+
+	return f
 }

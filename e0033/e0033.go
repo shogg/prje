@@ -1,5 +1,9 @@
 package e0033
 
+import (
+	"github.com/shogg/prje"
+)
+
 type rat struct {
 	n, d int
 }
@@ -8,14 +12,14 @@ func E0033() int64 {
 
 	var list []rat
 	for a := 11; a <= 98; a++ {
-		digitsa := digits(a)
+		digitsa := prje.Digits(a, 10)
 		for b := a + 1; b <= 99; b++ {
 			if a == b { continue }
 			r := rat { a, b }
 			for _, d := range digitsa {
 				if d == 0 { continue }
 				a1 := cancel(digitsa, d)
-				b1 := cancel(digits(b), d)
+				b1 := cancel(prje.Digits(b, 10), d)
 				if r.equals(rat { a1, b1 }) {
 					list = append(list, r)
 				}
@@ -28,23 +32,10 @@ func E0033() int64 {
 		result = result.times(r)
 	}
 
-	g := gcd(result.n, result.d)
+	g := prje.Gcd(result.n, result.d)
 	result = result.divide(rat { g, g })
 
 	return int64(result.d)
-}
-
-func digits(n int) []int {
-
-	var d []int
-	for n >= 10 {
-		d = append(d, n % 10)
-		n /= 10
-	}
-
-	d = append(d, n)
-
-	return d
 }
 
 func cancel(digits []int, d int) int {
@@ -72,18 +63,4 @@ func (a rat) times(b rat) rat {
 
 func (a rat) divide(b rat) rat {
 	return rat { a.n / b.n, a.d / b.d }
-}
-
-func gcd(a, b int) int {
-
-	min := a
-	if b < a { min = b }
-
-	for n := min; n >= 1; n++ {
-		if a % n == 0 && b % n == 0 {
-			return n
-		}
-	}
-
-	return 1
 }

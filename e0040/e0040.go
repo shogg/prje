@@ -1,5 +1,9 @@
 package e0040
 
+import (
+	"github.com/shogg/prje"
+)
+
 func E0040() int64 {
 	result := 1
 	for i := 1; i <= 1e6; i *= 10 {
@@ -20,18 +24,5 @@ func d(i int) int {
 	number := b - 1 + (i + m - 1) / m
 	digit := m - 1 - (i - 1) % m
 
-	return digits(number, 10)[digit]
-}
-
-func digits(n, base int) []int {
-
-	var d []int
-	for n >= base {
-		d = append(d, n % base)
-		n /= base
-	}
-
-	d = append(d, n)
-
-	return d
+	return prje.Digits(number, 10)[digit]
 }
