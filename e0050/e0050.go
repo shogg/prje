@@ -1,10 +1,14 @@
 package e0050
 
+import (
+	"github.com/shogg/prje"
+)
+
 const N = 1e6
 
 func E0050() int64 {
 
-	primes, sieve := psieve(N)
+	primes, sieve := prje.Psieve(N)
 
 	max := 0
 	prime := 0
@@ -26,22 +30,4 @@ func E0050() int64 {
 	}
 
 	return int64(prime)
-}
-
-func psieve(n int) ([]int, []bool) {
-
-	var primes []int
-	var sieve = make([]bool, n + 1)
-
-	for p := 2; p <= n; p++ {
-		if sieve[p] { continue }
-
-		for i := 2*p; i <= n; i += p {
-			sieve[i] = true
-		}
-
-		primes = append(primes, p)
-	}
-
-	return primes, sieve
 }
