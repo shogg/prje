@@ -133,11 +133,11 @@ func Pandigital(n int, digits []int) bool {
 
 func Permutation(i int, d []int) []int {
 
-	digits := make([]int, len(d))
+	N := len(d)
+	digits := make([]int, N)
 	copy(digits, d)
-	N := len(digits)
-	p := make([]int, len(digits))
-	f := FactorialDigits(i)
+	p := make([]int, N)
+	f := FactorialDigits(i, N)
 	for i := 0; i < len(f); i++ {
 		fi := f[N-i-1]
 		p[N-i-1] = digits[fi]
@@ -149,9 +149,9 @@ func Permutation(i int, d []int) []int {
 	return p
 }
 
-func FactorialDigits(n int) []int {
+func FactorialDigits(n, count int) []int {
 
-	f := make([]int, 4)
+	f := make([]int, count)
 	for i := 1; n != 0; i++ {
 		f[i - 1] = n % i
 		n /= i
