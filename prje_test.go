@@ -2,7 +2,7 @@ package prje_test
 
 import (
 	"testing"
-	"github.com/shogg/prje"
+	"github.com/shogg/prje/problems"
 )
 
 var results = [1000]int64 {}
@@ -58,7 +58,7 @@ func init() {
 }
 
 func TestPrje(t *testing.T) {
-	for i, p := range prje.Problems {
+	for i, p := range problems.Problems {
 		if p == nil { continue }
 		r := results[i]
 

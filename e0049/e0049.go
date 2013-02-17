@@ -3,7 +3,7 @@ package e0049
 import (
 	"math"
 	"sort"
-	"github.com/shogg/prje/libprje"
+	"github.com/shogg/prje"
 )
 
 func E0049() int64 {
@@ -28,10 +28,10 @@ func E0049() int64 {
 		if t == nil { continue }
 
 		var r []int
-		r = append(r, libprje.Digits(t[2], 10)...)
-		r = append(r, libprje.Digits(t[1], 10)...)
-		r = append(r, libprje.Digits(t[0], 10)...)
-		number := libprje.Number(r, 10)
+		r = append(r, prje.Digits(t[2], 10)...)
+		r = append(r, prje.Digits(t[1], 10)...)
+		r = append(r, prje.Digits(t[0], 10)...)
+		number := prje.Number(r, 10)
 		if index64(result, number) < 0 {
 			result = append(result, number)
 		}

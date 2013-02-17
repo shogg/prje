@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"strconv"
-	"github.com/shogg/prje"
+	"github.com/shogg/prje/problems"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 
-	problem := prje.Problems[nr]
+	problem := problems.Problems[nr]
 	if problem == nil {
 		println("problem", nr, "not found")
 		return
