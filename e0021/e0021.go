@@ -1,5 +1,9 @@
 package e0021
 
+import (
+	"github.com/shogg/prje"
+)
+
 func E0021() int64 {
 
 	sum := 0
@@ -14,22 +18,10 @@ func E0021() int64 {
 
 func d(n int) int {
 
-	div := make(chan int)
-	go divisors(n, div)
-
 	sum := 0
-	for i := range div {
-		sum += i
+	for _, f := range prje.Factors(n) {
+		sum += f
 	}
 
 	return sum
-}
-
-func divisors(n int, div chan int) {
-
-	for i := 1; i < n; i++ {
-		if n % i != 0 { continue }
-		div <- i
-	}
-	close(div)
 }

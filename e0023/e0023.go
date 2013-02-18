@@ -2,6 +2,7 @@ package e0023
 
 import (
 	"math"
+	"github.com/shogg/prje"
 )
 
 func E0023() int64 {
@@ -10,7 +11,9 @@ func E0023() int64 {
 	for n := 1; n < 28123; n++ {
 		found := true
 		for a := 1; a < n; a++ {
-			if abundant(a) && abundant(n - a) { found = false; break }
+			if abundant(a) && abundant(n - a) {
+				found = false; break
+			}
 		}
 		if found { sum += n }
 	}
@@ -21,7 +24,8 @@ func E0023() int64 {
 func abundant(n int) bool {
 
 	sum := 0
-	for _, d := range divisors(n) {
+	//for _, d := range divisors(n) {
+	for _, d := range prje.Factors(n) {
 		sum += d
 	}
 

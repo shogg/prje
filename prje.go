@@ -92,6 +92,34 @@ func Prime(p int) bool {
 	return true
 }
 
+func Primefactors(n int) []int {
+
+	var result []int
+	for f := 2; f <= n; f++ {
+		for n % f == 0 {
+			result = append(result, f)
+			n /= f
+		}
+	}
+
+	return result
+}
+
+func Factors(n int) []int {
+
+	result := []int { 1 }
+	sqrt := int(math.Sqrt((float64(n))))
+	for f := 2; f <= sqrt; f++ {
+		if n % f == 0 {
+			result = append(result, f)
+			j := n / f
+			if j != f { result = append(result, j) }
+		}
+	}
+
+	return result
+}
+
 func Gcd(a, b int) int {
 
 	min := a
@@ -104,6 +132,16 @@ func Gcd(a, b int) int {
 	}
 
 	return 1
+}
+
+func Min(a, b int) int {
+	if a <= b { return a }
+	return b
+}
+
+func Max(a, b int) int {
+	if a >= b { return a }
+	return b
 }
 
 func Factorial(n int) int64 {

@@ -1,5 +1,9 @@
 package e0029
 
+import (
+	"github.com/shogg/prje"
+)
+
 const N = 100
 
 func E0029() int64 {
@@ -7,14 +11,14 @@ func E0029() int64 {
 	var matrix [N+1][N+1]bool
 
 	for a := 2; a <= N; a++ {
-		prime, exp := same(primefactors(a))
+		prime, exp := same(prje.Primefactors(a))
 		for b := 2; b <= N; b++ {
 			a0, b0 := a, b
 			if exp >= 2 {
 				a0, b0 = prime, b * exp
 			}
-			for _, f := range factors(b0) {
-				a1 := pow(a0, f)
+			for _, f := range prje.Factors(b0) {
+				a1 := int(prje.Pow(a0, f))
 				b1 := b0 / f
 				if a1 > a && a1 <= N && b1 <= N {
 					matrix[a1][b1] = true
@@ -35,31 +39,6 @@ func E0029() int64 {
 	return int64(count)
 }
 
-func factors(n int) []int {
-
-	var result []int
-	for f := 2; f < n; f++ {
-		if n % f == 0 {
-			result = append(result, f)
-		}
-	}
-
-	return result
-}
-
-func primefactors(n int) []int {
-
-	var result []int
-	for f := 2; f <= n; f++ {
-		for n % f == 0 {
-			result = append(result, f)
-			n /= f
-		}
-	}
-
-	return result
-}
-
 func same(f []int) (prime, exp int) {
 
 	cmp := f[0]
@@ -68,15 +47,4 @@ func same(f []int) (prime, exp int) {
 	}
 
 	return cmp, len(f)
-}
-
-func pow(n, e int) int {
-
-	p := 1
-	for i := 0; i < e; i++ {
-		p *= n
-		if p > N { break }
-	}
-
-	return p
 }
