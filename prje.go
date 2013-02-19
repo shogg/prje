@@ -38,6 +38,17 @@ func Pow(n, e int) int64 {
 	return p
 }
 
+func PowMod(n, e int, mod int64) int64 {
+
+	p := int64(1)
+	for i := 1; i <= e; i++ {
+		p *= int64(n)
+		p %= mod
+	}
+
+	return p
+}
+
 func Reverse(digits []int) []int {
 	r := make([]int, len(digits))
 	copy(r, digits)
@@ -196,4 +207,54 @@ func FactorialDigits(n, count int) []int {
 	}
 
 	return f
+}
+
+func Uniq(numbers []int) []int {
+	var uniq []int
+	last := math.MinInt32
+	for _, n := range numbers {
+		if n == last { continue }
+		uniq = append(uniq, n)
+		last = n
+	}
+
+	return uniq
+}
+
+func Square(n int) bool {
+	r := math.Sqrt(float64(n))
+	return r == math.Floor(r)
+}
+
+func Abundant(n int) bool {
+	sum := 0
+	for _, d := range Factors(n) {
+		sum += d
+	}
+
+	return sum > n
+}
+
+func Triangle(n int64) int64 {
+	t := n*(n + 1) / 2
+	return t
+}
+
+func Triangular(t int) bool {
+	n := -.5 + math.Sqrt(.25 + 2.0*float64(t))
+	return n == math.Trunc(n)
+}
+
+func Pentagon(n int64) int64 {
+	return n*(3*n - 1) / 2
+}
+
+func Pentagonal(p int64) bool {
+	n := 1.0/6.0 + math.Sqrt(1.0/36.0 + 2.0*float64(p)/3.0)
+	return Pentagon(int64(n)) == p
+}
+
+func Hexagonal(h int64) bool {
+	n := .25 + math.Sqrt(1.0/16.0 + float64(h)/2.0)
+	return n == math.Trunc(n)
 }

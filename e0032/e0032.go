@@ -20,14 +20,7 @@ func E0032() int64 {
 	}
 
 	sort.Ints(numbers)
-
-	var uniq []int
-	last := 0
-	for _, n := range numbers {
-		if n == last { continue }
-		uniq = append(uniq, n)
-		last = n
-	}
+	uniq := prje.Uniq(numbers)
 
 	sum := 0
 	for _, n := range uniq {

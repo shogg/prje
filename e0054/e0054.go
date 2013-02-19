@@ -6,6 +6,7 @@ import (
 	"time"
 	"net/http"
 	"io/ioutil"
+	"github.com/shogg/prje"
 )
 
 var (
@@ -89,7 +90,7 @@ func multi(h hand, counts ...int) int {
 		counts[c - 1]--
 		if counts[c - 1] < 0 { return 0 }
 
-		m += pow(16, c - 1) * i
+		m += int(prje.Pow(16, c - 1)) * i
 	}
 
 	return m
@@ -131,16 +132,6 @@ func count(h hand) []int {
 		counts[c.val]++
 	}
 	return counts
-}
-
-func pow(n, e int) int {
-
-	p := 1
-	for i := 1; i <= e; i++ {
-		p *= n
-	}
-
-	return p
 }
 
 func readHands(url string) [][2]hand {
