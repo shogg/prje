@@ -48,6 +48,7 @@ import (
 	"github.com/shogg/prje/e0052"
 	"github.com/shogg/prje/e0053"
 	"github.com/shogg/prje/e0054"
+	"github.com/shogg/prje/e0055"
 )
 
 var Problems = [1000]func() int64 {}
@@ -100,4 +101,5 @@ func init() {
 	Problems[52] = e0052.E0052
 	Problems[53] = e0053.E0053
 	Problems[54] = e0054.E0054
+	Problems[55] = e0055.E0055
 }
