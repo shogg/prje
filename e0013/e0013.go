@@ -130,10 +130,6 @@ func E0013() int64 {
 	sum[D] = carry % 10
 	sum[D+1] = carry / 10
 
-	for d := D+1; d > D-9; d-- {
-		print(sum[d])
-	}
-
 	n := prje.Number(sum[42:52], 10)
 	return n
 }
