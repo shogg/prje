@@ -7,13 +7,12 @@ import (
 func E0055() int64 {
 
 	count := int64(0)
-	for n := 10; n < 1e5; n++ {
-		m := int64(n)
+	for n := 10; n < 1e4; n++ {
+		m := prje.NewNat(prje.Digits(n, 10), 10)
 		lychrel := true
 		for i := 0; i < 50; i++ {
-			if n == 196 { println(m) }
-			m += reverse(m)
-			if prje.Pal(prje.Digits(int(m), 10)) {
+			m = m.Plus(reverse(m))
+			if prje.Pal(m.Digits) {
 				lychrel = false
 				break
 			}
@@ -25,7 +24,7 @@ func E0055() int64 {
 	return count
 }
 
-func reverse(n int64) int64 {
-	r := prje.Number(prje.Reverse(prje.Digits(int(n), 10)), 10)
+func reverse(n prje.Nat) prje.Nat {
+	r := prje.NewNat(prje.Reverse(n.Digits), 10)
 	return r
 }
