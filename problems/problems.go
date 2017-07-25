@@ -17,7 +17,7 @@ import (
 	"github.com/shogg/prje/e0021"
 	"github.com/shogg/prje/e0022"
 	"github.com/shogg/prje/e0023"
-	"github.com/shogg/prje/e0024"
+//	"github.com/shogg/prje/e0024"
 	"github.com/shogg/prje/e0025"
 	"github.com/shogg/prje/e0026"
 	"github.com/shogg/prje/e0027"
@@ -70,7 +70,7 @@ func init() {
 	Problems[21] = e0021.E0021
 	Problems[22] = e0022.E0022
 	Problems[23] = e0023.E0023
-	Problems[24] = e0024.E0024
+//	Problems[24] = e0024.E0024
 	Problems[25] = e0025.E0025
 	Problems[26] = e0026.E0026
 	Problems[27] = e0027.E0027
