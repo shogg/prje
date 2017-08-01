@@ -7,8 +7,8 @@ import (
 	"github.com/shogg/prje/e0011"
 	"github.com/shogg/prje/e0012"
 	"github.com/shogg/prje/e0013"
-//	"github.com/shogg/prje/e0014"
-//	"github.com/shogg/prje/e0015"
+	//	"github.com/shogg/prje/e0014"
+	//	"github.com/shogg/prje/e0015"
 	"github.com/shogg/prje/e0016"
 	"github.com/shogg/prje/e0017"
 	"github.com/shogg/prje/e0018"
@@ -17,7 +17,7 @@ import (
 	"github.com/shogg/prje/e0021"
 	"github.com/shogg/prje/e0022"
 	"github.com/shogg/prje/e0023"
-//	"github.com/shogg/prje/e0024"
+	//	"github.com/shogg/prje/e0024"
 	"github.com/shogg/prje/e0025"
 	"github.com/shogg/prje/e0026"
 	"github.com/shogg/prje/e0027"
@@ -49,9 +49,10 @@ import (
 	"github.com/shogg/prje/e0053"
 	"github.com/shogg/prje/e0054"
 	"github.com/shogg/prje/e0055"
+	"github.com/shogg/prje/e0056"
 )
 
-var Problems = [1000]func() int64 {}
+var Problems = [1000]func() int64{}
 
 func init() {
 	Problems[8] = e0008.E0008
@@ -60,8 +61,8 @@ func init() {
 	Problems[11] = e0011.E0011
 	Problems[12] = e0012.E0012
 	Problems[13] = e0013.E0013
-//	Problems[14] = e0014.E0014
-//	Problems[15] = e0015.E0015
+	//	Problems[14] = e0014.E0014
+	//	Problems[15] = e0015.E0015
 	Problems[16] = e0016.E0016
 	Problems[17] = e0017.E0017
 	Problems[18] = e0018.E0018
@@ -70,7 +71,7 @@ func init() {
 	Problems[21] = e0021.E0021
 	Problems[22] = e0022.E0022
 	Problems[23] = e0023.E0023
-//	Problems[24] = e0024.E0024
+	//	Problems[24] = e0024.E0024
 	Problems[25] = e0025.E0025
 	Problems[26] = e0026.E0026
 	Problems[27] = e0027.E0027
@@ -102,4 +103,5 @@ func init() {
 	Problems[53] = e0053.E0053
 	Problems[54] = e0054.E0054
 	Problems[55] = e0055.E0055
+	Problems[56] = e0056.E0056
 }
