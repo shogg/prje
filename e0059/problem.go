@@ -2,10 +2,12 @@ package e0059
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 )
 
@@ -25,9 +27,82 @@ func Problem() int64 {
 	}
 
 	text := decrypt(cipher)
-	println(text)
+	println(string(text))
 
 	return sumBytes(text)
+}
+
+func isASCII(b byte) bool {
+	return b >= 0x0a && b <= 0x7e
+}
+
+var (
+	illPunct  = regexp.MustCompile(`[;,?!]\S`)
+	illBraces = regexp.MustCompile(`\S\(|\)\S`)
+)
+
+func illformed(text []byte) bool {
+
+	if illPunct.Find(text) != nil {
+		return true
+	}
+
+	if illBraces.Find(text) != nil {
+		return true
+	}
+
+	return false
+}
+
+func keygen() func() []byte {
+
+	var key = [3]byte{'a' - 1, 'a', 'a'}
+	return func() []byte {
+
+		for i := 0; i < 3; i++ {
+
+			if key[i] < 'z' {
+				key[i]++
+				return key[:]
+			}
+
+			key[i] = 'a'
+		}
+
+		return nil
+	}
+}
+
+func decrypt(data []byte) []byte {
+
+	gen := keygen()
+
+	var tmp = make([]byte, len(data))
+	for key := gen(); key != nil; key = gen() {
+
+		ascii := true
+		copy(tmp, data)
+
+		for i := 0; i < len(tmp); i++ {
+			tmp[i] = data[i] ^ key[i%3]
+			if !isASCII(tmp[i]) {
+				ascii = false
+				break
+			}
+		}
+
+		if !ascii {
+			continue
+		}
+
+		if illformed(tmp) {
+			continue
+		}
+
+		return tmp
+	}
+
+	return nil
 }
 
 func sumBytes(text []byte) int64 {
@@ -40,37 +115,24 @@ func sumBytes(text []byte) int64 {
 	return sum
 }
 
-const (
-	HT = 0x09
-	LF = 0x0a
-	VT = 0x0b
-	CR = 0x0d
-)
+func atComma(data []byte, eof bool) (int, []byte, error) {
+	if eof {
+		return 0, nil, nil
+	}
+	for i, b := range data {
+		if b != ',' && b != 0xa {
+			continue
+		}
 
-func isAscii(b byte) bool {
-	return b == HT || b == LF || b == VT || b == CR || (b >= 0x20 && b <= 0x7e)
-}
-
-func decrypt(data []byte) []byte {
-	return nil
+		return i + 1, data[:i], nil
+	}
+	return -1, nil, fmt.Errorf("eof")
 }
 
 func scan(r io.Reader) ([]byte, error) {
 
 	s := bufio.NewScanner(r)
-	s.Split(func(data []byte, eof bool) (int, []byte, error) {
-		if eof {
-			return len(data), data, nil
-		}
-		for i, b := range data {
-			if b != ',' {
-				continue
-			}
-
-			return i, data[:i-1], nil
-		}
-		return -1, nil, bufio.ErrFinalToken
-	})
+	s.Split(atComma)
 
 	var cipher []byte
 	for s.Scan() {
