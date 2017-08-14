@@ -81,7 +81,8 @@ func Psieve(n int) ([]int, []bool) {
 	var primes = make([]int, 0, n+1)
 	var sieve = make([]bool, n+1)
 
-	for p := 2; p <= n; p++ {
+	sqrtn := int(math.Sqrt(float64(n)))
+	for p := 2; p <= sqrtn; p++ {
 		if sieve[p] {
 			continue
 		}
